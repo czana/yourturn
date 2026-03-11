@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Link } from "react-router"
-import { Plus, ToolCase, ArrowRight, Clock } from "lucide-react"
+import { Plus, ToolCase, ArrowRight, Clock, Bell, AlertTriangle } from "lucide-react"
 import Modal from "@/components/Modal"
-import { MOCK_CASES } from "@/data/cases"
+import { MOCK_CASES, DECAYING_CASES } from "@/data/cases"
 
 function formatDate(date) {
   return date.toLocaleDateString(undefined, {
@@ -11,31 +11,39 @@ function formatDate(date) {
   })
 }
 
-function AvatarRow({ collaborators, assignee }) {
+const RING_GRADIENTS = {
+  accent: "conic-gradient(var(--accent) 180deg, oklch(0.45 0.03 180 / 0.25) 180deg)",
+  destructive: "conic-gradient(var(--destructive) 180deg, oklch(0.35 0.05 27 / 0.25) 180deg)",
+}
+
+function AvatarRow({ collaborators, assignee, ringColor }) {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-2">
       {collaborators.map((person) => (
-        <img
-          key={person.name}
-          src={person.avatarUrl}
-          alt={person.name}
-          title={person.name}
-          className={
-            person.name === assignee
-              ? "h-6 w-6 rounded-full border-2 border-accent object-cover"
-              : "h-6 w-6 rounded-full object-cover"
-          }
-        />
+        <div key={person.name} className="relative">
+          {ringColor && person.name === assignee && (
+            <div
+              className="absolute -inset-[3px] rounded-full animate-[border-spin_2.5s_linear_infinite]"
+              style={{ background: RING_GRADIENTS[ringColor] }}
+            />
+          )}
+          <img
+            src={person.avatarUrl}
+            alt={person.name}
+            title={person.name}
+            className="relative h-7 w-7 rounded-full object-cover"
+          />
+        </div>
       ))}
     </div>
   )
 }
 
-function CaseCard({ c }) {
+function CaseCard({ c, action, ringColor }) {
   return (
     <Link
       to={`/cases/${c.id}`}
-      className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
+      className="flex flex-col gap-3 rounded-xl border border-border bg-muted/30 p-5 shadow-sm transition-shadow hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-sm font-semibold leading-snug">{c.title}</h3>
@@ -49,22 +57,77 @@ function CaseCard({ c }) {
         <span className="text-xs text-foreground/80">{c.currentStep}</span>
       </div>
 
-      <AvatarRow collaborators={c.collaborators} assignee={c.assignee} />
+      <div className="flex items-center justify-between">
+        <AvatarRow collaborators={c.collaborators} assignee={c.assignee} ringColor={ringColor} />
+        {action}
+      </div>
     </Link>
   )
 }
 
-function Section({ title, icon: Icon, count, children }) {
+function DecayingCaseCard({ c }) {
+  const handleRemind = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  return (
+    <CaseCard
+      c={c}
+      ringColor="destructive"
+      action={
+        <button
+          onClick={handleRemind}
+          className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-destructive/30 bg-destructive/10 px-2.5 py-1 text-[11px] font-medium text-destructive transition-colors hover:bg-destructive/20"
+        >
+          <Bell className="h-3 w-3" />
+          Remind
+        </button>
+      }
+    />
+  )
+}
+
+function Section({ title, icon: Icon, count, variant, children }) {
+  const isAccent = variant === "accent"
+  const isDestructive = variant === "destructive"
+
   return (
     <section>
       <div className="mb-3 flex items-center gap-2">
-        <Icon className="h-4 w-4 text-muted-foreground" />
-        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-        <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+        <Icon
+          className={
+            isAccent
+              ? "h-5 w-5 animate-[wiggle_1s_ease-in-out_infinite] text-accent"
+              : isDestructive
+                ? "h-5 w-5 text-destructive"
+                : "h-5 w-5 text-muted-foreground"
+          }
+        />
+        <h2
+          className={
+            isAccent
+              ? "text-base font-bold text-accent"
+              : isDestructive
+                ? "text-base font-semibold text-destructive"
+                : "text-base font-semibold text-foreground"
+          }
+        >
+          {title}
+        </h2>
+        <span
+          className={
+            isAccent
+              ? "rounded-full bg-accent/15 px-2 py-0.5 text-[11px] font-medium text-accent"
+              : isDestructive
+                ? "rounded-full bg-destructive/15 px-2 py-0.5 text-[11px] font-medium text-destructive"
+                : "rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+          }
+        >
           {count}
         </span>
       </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {children}
       </div>
     </section>
@@ -113,7 +176,7 @@ export default function CasesPage() {
         </button>
       </div>
 
-      {cases.length === 0 ? (
+      {cases.length === 0 && DECAYING_CASES.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10">
             <ToolCase className="h-7 w-7 text-accent" />
@@ -121,9 +184,9 @@ export default function CasesPage() {
           <p className="text-muted-foreground">No cases yet.</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-16">
           {yourTurn.length > 0 && (
-            <Section title="Your turn" icon={ArrowRight} count={yourTurn.length}>
+            <Section title="Your turn" icon={Bell} count={yourTurn.length} variant="accent">
               {yourTurn.map((c) => (
                 <CaseCard key={c.id} c={c} />
               ))}
@@ -133,7 +196,15 @@ export default function CasesPage() {
           {waiting.length > 0 && (
             <Section title="Waiting" icon={Clock} count={waiting.length}>
               {waiting.map((c) => (
-                <CaseCard key={c.id} c={c} />
+                <CaseCard key={c.id} c={c} ringColor="accent" />
+              ))}
+            </Section>
+          )}
+
+          {DECAYING_CASES.length > 0 && (
+            <Section title="Decaying" icon={AlertTriangle} count={DECAYING_CASES.length} variant="destructive">
+              {DECAYING_CASES.map((c) => (
+                <DecayingCaseCard key={c.id} c={c} />
               ))}
             </Section>
           )}

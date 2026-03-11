@@ -270,6 +270,116 @@ export const MOCK_CASES = [
       { id: "8c", date: new Date("2026-03-01"), actor: "Nina Petrova", avatarUrl: avatar("nina-p"), action: "Needs to prepare the audit report", pending: true },
     ],
   },
+  {
+    id: "9",
+    title: "DevOps setup for Velta",
+    status: "waiting",
+    collaborators: [
+      { name: "Tom Czana", avatarUrl: avatar("czana") },
+      { name: "Alex Norberg", avatarUrl: avatar("alex-n") },
+      { name: "Bartek Kamiński", avatarUrl: avatar("bartek-k") },
+    ],
+    currentStep: "Client to approve AWS budget",
+    assignee: "Alex Norberg",
+    updatedAt: new Date("2026-03-02"),
+    timeline: [
+      { id: "9a", date: new Date("2026-02-20"), actor: "Tom Czana", avatarUrl: avatar("czana"), action: "Presented infrastructure proposal" },
+      { id: "9b", date: new Date("2026-02-25"), actor: "Bartek Kamiński", avatarUrl: avatar("bartek-k"), action: "Prepared cost breakdown for AWS resources" },
+      { id: "9c", date: new Date("2026-03-02"), actor: "Alex Norberg", avatarUrl: avatar("alex-n"), action: "Needs to approve AWS budget", pending: true },
+    ],
+  },
+  {
+    id: "10",
+    title: "Onboarding portal — HireFlow",
+    status: "waiting",
+    collaborators: [
+      { name: "Tom Czana", avatarUrl: avatar("czana") },
+      { name: "Diana Walsh", avatarUrl: avatar("diana-w") },
+      { name: "Ola Maj", avatarUrl: avatar("ola-maj") },
+    ],
+    currentStep: "Client reviewing prototype",
+    assignee: "Diana Walsh",
+    updatedAt: new Date("2026-02-28"),
+    timeline: [
+      { id: "10a", date: new Date("2026-02-10"), actor: "Diana Walsh", avatarUrl: avatar("diana-w"), action: "Shared onboarding flow requirements" },
+      { id: "10b", date: new Date("2026-02-18"), actor: "Ola Maj", avatarUrl: avatar("ola-maj"), action: "Delivered clickable prototype" },
+      { id: "10c", date: new Date("2026-02-28"), actor: "Diana Walsh", avatarUrl: avatar("diana-w"), action: "Needs to review and approve the prototype", pending: true },
+    ],
+  },
+  {
+    id: "11",
+    title: "Data analytics dashboard — Quartzy",
+    status: "waiting",
+    collaborators: [
+      { name: "Tom Czana", avatarUrl: avatar("czana") },
+      { name: "Leo Fang", avatarUrl: avatar("leo-fang") },
+    ],
+    currentStep: "Client gathering sample datasets",
+    assignee: "Leo Fang",
+    updatedAt: new Date("2026-02-26"),
+    timeline: [
+      { id: "11a", date: new Date("2026-02-15"), actor: "Tom Czana", avatarUrl: avatar("czana"), action: "Scoped dashboard requirements and KPIs" },
+      { id: "11b", date: new Date("2026-02-20"), actor: "Tom Czana", avatarUrl: avatar("czana"), action: "Requested sample datasets for development" },
+      { id: "11c", date: new Date("2026-02-26"), actor: "Leo Fang", avatarUrl: avatar("leo-fang"), action: "Needs to gather and send sample datasets", pending: true },
+    ],
+  },
+  {
+    id: "12",
+    title: "SLA negotiation — CloudServe",
+    status: "waiting",
+    collaborators: [
+      { name: "Tom Czana", avatarUrl: avatar("czana") },
+      { name: "Maria Santos", avatarUrl: avatar("maria-s") },
+      { name: "Agnieszka Sikora", avatarUrl: avatar("agnieszka-s") },
+    ],
+    currentStep: "Legal drafting counter-proposal",
+    assignee: "Agnieszka Sikora",
+    updatedAt: new Date("2026-02-24"),
+    timeline: [
+      { id: "12a", date: new Date("2026-02-10"), actor: "Maria Santos", avatarUrl: avatar("maria-s"), action: "Sent initial SLA proposal" },
+      { id: "12b", date: new Date("2026-02-15"), actor: "Tom Czana", avatarUrl: avatar("czana"), action: "Reviewed and flagged uptime guarantees as too low" },
+      { id: "12c", date: new Date("2026-02-24"), actor: "Agnieszka Sikora", avatarUrl: avatar("agnieszka-s"), action: "Needs to draft counter-proposal with updated terms", pending: true },
+    ],
+  },
+]
+
+export const DECAYING_CASES = [
+  {
+    id: "d1",
+    title: "Invoice dispute — Neoncraft",
+    status: "decaying",
+    collaborators: [
+      { name: "Tom Czana", avatarUrl: avatar("czana") },
+      { name: "Viktor Holm", avatarUrl: avatar("viktor-h") },
+    ],
+    currentStep: "No response from client for 23 days",
+    assignee: "Viktor Holm",
+    updatedAt: new Date("2026-02-16"),
+    timeline: [
+      { id: "d1a", date: new Date("2026-01-20"), actor: "Tom Czana", avatarUrl: avatar("czana"), action: "Sent corrected invoice with breakdown" },
+      { id: "d1b", date: new Date("2026-02-02"), actor: "Viktor Holm", avatarUrl: avatar("viktor-h"), action: "Acknowledged receipt, promised to review" },
+      { id: "d1c", date: new Date("2026-02-16"), actor: "Tom Czana", avatarUrl: avatar("czana"), action: "Followed up — still no response", pending: true },
+    ],
+  },
+  {
+    id: "d2",
+    title: "Partnership proposal — Arcline",
+    status: "decaying",
+    collaborators: [
+      { name: "Tom Czana", avatarUrl: avatar("czana") },
+      { name: "Sara Jensen", avatarUrl: avatar("sara-j") },
+      { name: "Marek Lewandowski", avatarUrl: avatar("marek-l") },
+    ],
+    currentStep: "Waiting for signed LOI for 18 days",
+    assignee: "Sara Jensen",
+    updatedAt: new Date("2026-02-21"),
+    timeline: [
+      { id: "d2a", date: new Date("2026-01-28"), actor: "Tom Czana", avatarUrl: avatar("czana"), action: "Presented partnership terms" },
+      { id: "d2b", date: new Date("2026-02-05"), actor: "Sara Jensen", avatarUrl: avatar("sara-j"), action: "Expressed interest and requested LOI draft" },
+      { id: "d2c", date: new Date("2026-02-10"), actor: "Marek Lewandowski", avatarUrl: avatar("marek-l"), action: "Sent LOI for signature" },
+      { id: "d2d", date: new Date("2026-02-21"), actor: "Sara Jensen", avatarUrl: avatar("sara-j"), action: "Needs to sign and return the LOI", pending: true },
+    ],
+  },
 ]
 
 export const ARCHIVED_CASES = [
