@@ -1,21 +1,37 @@
-import { Hand } from "lucide-react"
+import { useState } from "react"
+import { Routes, Route, Navigate } from "react-router"
+import { Menu } from "lucide-react"
+import Sidebar from "@/components/Sidebar"
+import CasesPage from "@/pages/CasesPage"
+import CaseDetailPage from "@/pages/CaseDetailPage"
+import ArchivePage from "@/pages/ArchivePage"
 
 function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center px-4">
-      <div className="flex flex-col items-center gap-6 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent">
-          <Hand className="h-8 w-8 text-accent-foreground" />
+    <div className="flex min-h-svh">
+      <Sidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      <main className="flex flex-1 flex-col overflow-auto">
+        <div className="flex items-center border-b border-border px-4 py-3 md:hidden">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="cursor-pointer text-foreground/70 hover:text-foreground"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
         </div>
-        <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-            Your Turn!
-          </h1>
-          <p className="text-lg text-muted-foreground sm:text-xl">
-            Hello World
-          </p>
-        </div>
-      </div>
+        <Routes>
+          <Route path="/cases" element={<CasesPage />} />
+          <Route path="/cases/:id" element={<CaseDetailPage />} />
+          <Route path="/archive" element={<ArchivePage />} />
+          <Route path="/archive/:id" element={<CaseDetailPage />} />
+          <Route path="*" element={<Navigate to="/cases" replace />} />
+        </Routes>
+      </main>
     </div>
   )
 }
